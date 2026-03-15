@@ -7,6 +7,31 @@ export class FlashcardsService {
 
   constructor(private prisma: PrismaService) {}
 
+  /** Public: get completed deck badges for a user (icon + title only). */
+  async getCompletedBadges(userId: string) {
+    const decks = await this.prisma.flashcardDeck.findMany({
+      where: { active: true },
+      orderBy: { order: 'asc' },
+      include: { _count: { select: { cards: true } } },
+    });
+
+    const progress = await this.prisma.flashcardProgress.groupBy({
+      by: ['deckId'],
+      where: { userId, status: 'MASTERED' },
+      _count: { id: true },
+    });
+    const progressMap = new Map(progress.map((p) => [p.deckId, p._count.id]));
+
+    return decks
+      .filter((d) => d._count.cards > 0 && (progressMap.get(d.id) ?? 0) >= d._count.cards)
+      .map((d) => ({
+        code: d.code,
+        icon: d.icon,
+        titleFa: d.titleFa,
+        titleEn: d.titleEn,
+      }));
+  }
+
   /** List all active decks with card counts and user progress summary. */
   async listDecks(userId?: string) {
     const decks = await this.prisma.flashcardDeck.findMany({

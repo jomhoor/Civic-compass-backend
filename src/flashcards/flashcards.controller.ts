@@ -21,6 +21,12 @@ export class FlashcardsController {
     return this.flashcardsService.listDecks(userId);
   }
 
+  /** Public: get completed deck badges for a user's profile. */
+  @Get('badges/:userId')
+  async getCompletedBadges(@Param('userId') userId: string) {
+    return this.flashcardsService.getCompletedBadges(userId);
+  }
+
   /** Public: get a single deck with all cards. */
   @Get('decks/:code')
   async getDeck(@Param('code') code: string) {
