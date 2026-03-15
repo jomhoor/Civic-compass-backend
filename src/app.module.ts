@@ -15,6 +15,7 @@ import { QuestionsModule } from './questions/questions.module';
 import { ResponsesModule } from './responses/responses.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { WalletModule } from './wallet/wallet.module';
+import { FlashcardsModule } from './flashcards/flashcards.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { WalletModule } from './wallet/wallet.module';
     AnalyticsModule,
     PokeModule,
     ChatModule,
+    FlashcardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

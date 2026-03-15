@@ -31,6 +31,8 @@ model User {
   receivedPokes         Poke[]         @relation("ReceivedPokes")
   sentMessages          EncryptedMessage[] @relation("SentEncryptedMessages")
   receivedMessages      EncryptedMessage[] @relation("ReceivedEncryptedMessages")
+  flashcardProgress     FlashcardProgress[]
+  flashcardRewards      FlashcardReward[]
 }
 
 model Demographics {
@@ -164,6 +166,85 @@ model EncryptedMessage {
 
   @@index([receiverId, createdAt])
   @@index([senderId, receiverId, createdAt])
+}
+
+model FlashcardDeck {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  titleFa     String
+  titleEn     String
+  description String?
+  sourceUrl   String?
+  icon        String   @default("📜")
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  rewardUsd   Float    @default(1.0)
+  createdAt   DateTime @default(now())
+
+  cards       Flashcard[]
+  progress    FlashcardProgress[]
+  rewards     FlashcardReward[]
+}
+
+model Flashcard {
+  id          String   @id @default(cuid())
+  deckId      String
+  type        String   @default("CONCEPT")
+  front       String
+  back        String
+  articleRef  String?
+  difficulty  String   @default("BEGINNER")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  deck        FlashcardDeck @relation(fields: [deckId], references: [id])
+  progress    FlashcardProgress[]
+}
+
+model FlashcardProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  cardId      String
+  deckId      String
+  status      String    @default("UNSEEN")
+  reviewCount Int       @default(0)
+  lastReview  DateTime?
+  nextReview  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User           @relation(fields: [userId], references: [id])
+  card        Flashcard      @relation(fields: [cardId], references: [id])
+  deck        FlashcardDeck  @relation(fields: [deckId], references: [id])
+
+  @@unique([userId, cardId])
+}
+
+model FlashcardReward {
+  id          String   @id @default(cuid())
+  userId      String
+  deckId      String
+  amount      Float
+  usdValue    Float    @default(1.0)
+  txHash      String?
+  awardedAt   DateTime @default(now())
+
+  user        User          @relation(fields: [userId], references: [id])
+  deck        FlashcardDeck @relation(fields: [deckId], references: [id])
+
+  @@unique([userId, deckId])
+}
+
+model AdminNotification {
+  id        String    @id @default(cuid())
+  type      String    // FLASHCARD_COMPLETION, REWARD_PENDING, etc.
+  title     String
+  message   String
+  metadata  String?   // JSON blob with context
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([type, readAt])
 }
 
 
