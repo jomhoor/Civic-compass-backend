@@ -88,7 +88,7 @@ export class CompassService {
   async getUserPublicProfile(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, walletAddress: true, displayName: true, createdAt: true },
+      select: { id: true, walletAddress: true, displayName: true, bio: true, createdAt: true },
     });
     if (!user) return null;
 
@@ -104,6 +104,7 @@ export class CompassService {
       id: user.id,
       wallet: truncatedWallet,
       displayName: user.displayName,
+      bio: user.bio,
       createdAt: user.createdAt,
       dimensions,
       confidence,

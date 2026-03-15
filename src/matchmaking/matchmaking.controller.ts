@@ -48,6 +48,7 @@ export class MatchmakingController {
     @Body() body: {
       sharingMode?: string;
       displayName?: string;
+      bio?: string;
       matchThreshold?: number;
     },
   ) {
@@ -63,6 +64,10 @@ export class MatchmakingController {
 
     if (body.displayName !== undefined) {
       results.displayName = await this.matchmakingService.setDisplayName(userId, body.displayName);
+    }
+
+    if (body.bio !== undefined) {
+      results.bio = await this.matchmakingService.setBio(userId, body.bio);
     }
 
     if (body.matchThreshold !== undefined) {

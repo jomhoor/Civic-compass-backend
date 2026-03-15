@@ -293,6 +293,13 @@ export class MatchmakingService {
     });
   }
 
+  async setBio(userId: string, bio: string) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { bio: bio.slice(0, 280) },
+    });
+  }
+
   /**
    * Update a user's match threshold.
    */
@@ -312,6 +319,7 @@ export class MatchmakingService {
       select: {
         sharingMode: true,
         displayName: true,
+        bio: true,
         matchThreshold: true,
       },
     });
