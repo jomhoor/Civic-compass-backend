@@ -17,7 +17,7 @@ model User {
   lastNotifiedAt        DateTime?
   displayName           String?
   bio                   String?
-  sharingMode           String         @default("GHOST")
+  sharingMode           String         @default("PUBLIC")
   matchThreshold        Float          @default(0.8)
   chatPublicKey         String?
   createdAt             DateTime       @default(now())

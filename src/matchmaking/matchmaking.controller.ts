@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Query, UseGuards, Req, Param, HttpException, HttpStatus } from '@nestjs/common';
-import { MatchmakingService, MatchMode, MatchResult } from './matchmaking.service';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { MatchmakingService, MatchMode, MatchResult } from './matchmaking.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('matches')

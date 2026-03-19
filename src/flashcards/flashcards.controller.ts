@@ -1,15 +1,15 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-  Req,
+    Body,
+    Controller,
+    Get,
+    Param,
+    Post,
+    Query,
+    Req,
+    UseGuards,
 } from '@nestjs/common';
-import { FlashcardsService } from './flashcards.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FlashcardsService } from './flashcards.service';
 
 @Controller('flashcards')
 export class FlashcardsController {

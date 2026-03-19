@@ -41,10 +41,8 @@ export class AnalyticsService {
    * Optionally filter by country.
    */
   async getAggregateCompass(country?: string): Promise<AggregateCompass> {
-    // Get users who are PUBLIC (opted in to sharing)
-    const where: any = {
-      sharingMode: { in: ['PUBLIC', 'SELECTIVE'] },
-    };
+    // Analytics use ALL compass data anonymously — no privacy filter
+    const where: any = {};
 
     if (country) {
       where.demographics = { country };
@@ -100,9 +98,8 @@ export class AnalyticsService {
    * Buckets: [-1, -0.6), [-0.6, -0.2), [-0.2, 0.2), [0.2, 0.6), [0.6, 1.0]
    */
   async getDistribution(country?: string): Promise<AxisDistribution[]> {
-    const where: any = {
-      sharingMode: { in: ['PUBLIC', 'SELECTIVE'] },
-    };
+    // Analytics use ALL compass data anonymously — no privacy filter
+    const where: any = {};
     if (country) {
       where.demographics = { country };
     }
@@ -160,16 +157,13 @@ export class AnalyticsService {
     const since = new Date();
     since.setMonth(since.getMonth() - months);
 
-    // Get all compass entries from PUBLIC users within the time range
+    // Analytics use ALL compass data anonymously — no privacy filter
     const where: any = {
       createdAt: { gte: since },
-      user: {
-        sharingMode: { in: ['PUBLIC', 'SELECTIVE'] },
-      },
     };
 
     if (country) {
-      where.user.demographics = { country };
+      where.user = { demographics: { country } };
     }
 
     const entries = await this.prisma.compassEntry.findMany({
@@ -230,7 +224,7 @@ export class AnalyticsService {
         this.prisma.user.count(),
         this.prisma.compassEntry.count(),
         this.prisma.user.count({
-          where: { sharingMode: { in: ['PUBLIC', 'SELECTIVE'] } },
+          where: { sharingMode: { not: 'GHOST' } },
         }),
         this.prisma.userResponse.count(),
       ]);
