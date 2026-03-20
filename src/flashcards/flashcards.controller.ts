@@ -1,15 +1,15 @@
 import {
-    Body,
-    Controller,
-    Get,
-    Param,
-    Post,
-    Query,
-    Req,
-    UseGuards,
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FlashcardsService } from './flashcards.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('flashcards')
 export class FlashcardsController {
@@ -19,12 +19,6 @@ export class FlashcardsController {
   @Get('decks')
   async listDecks(@Query('userId') userId?: string) {
     return this.flashcardsService.listDecks(userId);
-  }
-
-  /** Public: get completed deck badges for a user's profile. */
-  @Get('badges/:userId')
-  async getCompletedBadges(@Param('userId') userId: string) {
-    return this.flashcardsService.getCompletedBadges(userId);
   }
 
   /** Public: get a single deck with all cards. */

@@ -16,8 +16,7 @@ model User {
   frequencyPreference   String         @default("WEEKLY")
   lastNotifiedAt        DateTime?
   displayName           String?
-  bio                   String?
-  sharingMode           String         @default("PUBLIC")
+  sharingMode           String         @default("GHOST")
   matchThreshold        Float          @default(0.8)
   chatPublicKey         String?
   createdAt             DateTime       @default(now())
