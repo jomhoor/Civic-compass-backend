@@ -192,6 +192,8 @@ model Flashcard {
   type        String   @default("CONCEPT")
   front       String
   back        String
+  frontEn     String?
+  backEn      String?
   articleRef  String?
   difficulty  String   @default("BEGINNER")
   order       Int      @default(0)
