@@ -49,6 +49,7 @@ export class MatchmakingController {
       sharingMode?: string;
       displayName?: string;
       matchThreshold?: number;
+      bio?: string;
     },
   ) {
     const userId = req.user.userId;
@@ -67,6 +68,10 @@ export class MatchmakingController {
 
     if (body.matchThreshold !== undefined) {
       results.threshold = await this.matchmakingService.setMatchThreshold(userId, body.matchThreshold);
+    }
+
+    if (body.bio !== undefined) {
+      results.bio = await this.matchmakingService.setBio(userId, body.bio);
     }
 
     return results;

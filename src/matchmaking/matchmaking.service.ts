@@ -293,6 +293,16 @@ export class MatchmakingService {
     });
   }
 
+  /**
+   * Update a user's bio.
+   */
+  async setBio(userId: string, bio: string) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { bio: bio.slice(0, 280) || null },
+    });
+  }
+
 
 
   /**
@@ -315,6 +325,7 @@ export class MatchmakingService {
         sharingMode: true,
         displayName: true,
         matchThreshold: true,
+        bio: true,
       },
     });
   }
