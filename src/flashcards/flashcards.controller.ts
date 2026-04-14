@@ -87,4 +87,10 @@ export class FlashcardsController {
   async markNotificationRead(@Param('id') id: string) {
     return this.flashcardsService.markNotificationRead(id);
   }
+
+  /** Public: get completed badges for a user profile. */
+  @Get('badges/:userId')
+  async getCompletedBadges(@Param('userId') userId: string) {
+    return this.flashcardsService.getCompletedBadges(userId);
+  }
 }

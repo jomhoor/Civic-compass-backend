@@ -252,4 +252,21 @@ export class FlashcardsService {
     }
     return next;
   }
+
+  /** Public: get completed badges (mastered decks) for a user. */
+  async getCompletedBadges(userId: string) {
+    const rewards = await this.prisma.flashcardReward.findMany({
+      where: { userId },
+      include: {
+        deck: { select: { code: true, icon: true, titleFa: true, titleEn: true } },
+      },
+      orderBy: { awardedAt: 'asc' },
+    });
+    return rewards.map((r) => ({
+      code: r.deck.code,
+      icon: r.deck.icon,
+      titleFa: r.deck.titleFa,
+      titleEn: r.deck.titleEn,
+    }));
+  }
 }
