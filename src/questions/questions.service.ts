@@ -132,6 +132,79 @@ export class QuestionsService {
 
     const existingCount = await this.prisma.question.count();
     if (existingCount > 0) {
+      // Incremental: add Big Five if missing
+      const bigFiveExists = await this.prisma.questionnaire.findUnique({ where: { slug: 'big-five' } });
+      if (!bigFiveExists) {
+        const bf = await this.prisma.questionnaire.create({
+          data: {
+            slug: 'big-five',
+            title: 'Big Five Personality',
+            titleFa: 'شخصیت پنج‌عاملی',
+            description: 'Discover your personality across 5 dimensions: Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism. 50 questions based on the public-domain IPIP inventory.',
+            descriptionFa: 'شخصیت خود را در ۵ بُعد کشف کنید: گشودگی، وظیفه‌شناسی، برون‌گرایی، توافق‌پذیری و روان‌رنجوری. ۵۰ سؤال بر اساس پرسشنامه IPIP.',
+            icon: 'Brain',
+            questionCount: 50,
+            active: true,
+            order: 6,
+          },
+        });
+        const bfProps = [
+          { text: 'I am the life of the party.', weights: { extraversion: 0.8 }, order: 1 },
+          { text: 'I feel little concern for others.', weights: { agreeableness: -0.8 }, order: 2 },
+          { text: 'I am always prepared.', weights: { conscientiousness: 0.8 }, order: 3 },
+          { text: 'I get stressed out easily.', weights: { neuroticism: 0.8 }, order: 4 },
+          { text: 'I have a rich vocabulary.', weights: { openness: 0.8 }, order: 5 },
+          { text: 'I don\'t talk a lot.', weights: { extraversion: -0.8 }, order: 6 },
+          { text: 'I am interested in people.', weights: { agreeableness: 0.8 }, order: 7 },
+          { text: 'I leave my belongings around.', weights: { conscientiousness: -0.8 }, order: 8 },
+          { text: 'I am relaxed most of the time.', weights: { neuroticism: -0.8 }, order: 9 },
+          { text: 'I have difficulty understanding abstract ideas.', weights: { openness: -0.8 }, order: 10 },
+          { text: 'I feel comfortable around people.', weights: { extraversion: 0.8 }, order: 11 },
+          { text: 'I insult people.', weights: { agreeableness: -0.8 }, order: 12 },
+          { text: 'I pay attention to details.', weights: { conscientiousness: 0.8 }, order: 13 },
+          { text: 'I worry about things.', weights: { neuroticism: 0.8 }, order: 14 },
+          { text: 'I have a vivid imagination.', weights: { openness: 0.8 }, order: 15 },
+          { text: 'I keep in the background.', weights: { extraversion: -0.8 }, order: 16 },
+          { text: 'I sympathize with others\' feelings.', weights: { agreeableness: 0.8 }, order: 17 },
+          { text: 'I make a mess of things.', weights: { conscientiousness: -0.8 }, order: 18 },
+          { text: 'I seldom feel blue.', weights: { neuroticism: -0.8 }, order: 19 },
+          { text: 'I am not interested in abstract ideas.', weights: { openness: -0.8 }, order: 20 },
+          { text: 'I start conversations.', weights: { extraversion: 0.8 }, order: 21 },
+          { text: 'I am not interested in other people\'s problems.', weights: { agreeableness: -0.8 }, order: 22 },
+          { text: 'I get chores done right away.', weights: { conscientiousness: 0.8 }, order: 23 },
+          { text: 'I am easily disturbed.', weights: { neuroticism: 0.8 }, order: 24 },
+          { text: 'I have excellent ideas.', weights: { openness: 0.8 }, order: 25 },
+          { text: 'I have little to say.', weights: { extraversion: -0.8 }, order: 26 },
+          { text: 'I have a soft heart.', weights: { agreeableness: 0.8 }, order: 27 },
+          { text: 'I often forget to put things back in their proper place.', weights: { conscientiousness: -0.8 }, order: 28 },
+          { text: 'I get upset easily.', weights: { neuroticism: 0.8 }, order: 29 },
+          { text: 'I do not have a good imagination.', weights: { openness: -0.8 }, order: 30 },
+          { text: 'I talk to a lot of different people at parties.', weights: { extraversion: 0.8 }, order: 31 },
+          { text: 'I am not really interested in others.', weights: { agreeableness: -0.8 }, order: 32 },
+          { text: 'I like order.', weights: { conscientiousness: 0.8 }, order: 33 },
+          { text: 'I change my mood a lot.', weights: { neuroticism: 0.8 }, order: 34 },
+          { text: 'I am quick to understand things.', weights: { openness: 0.8 }, order: 35 },
+          { text: 'I don\'t like to draw attention to myself.', weights: { extraversion: -0.8 }, order: 36 },
+          { text: 'I take time out for others.', weights: { agreeableness: 0.8 }, order: 37 },
+          { text: 'I shirk my duties.', weights: { conscientiousness: -0.8 }, order: 38 },
+          { text: 'I have frequent mood swings.', weights: { neuroticism: 0.8 }, order: 39 },
+          { text: 'I use difficult words.', weights: { openness: 0.8 }, order: 40 },
+          { text: 'I don\'t mind being the center of attention.', weights: { extraversion: 0.8 }, order: 41 },
+          { text: 'I feel others\' emotions.', weights: { agreeableness: 0.8 }, order: 42 },
+          { text: 'I follow a schedule.', weights: { conscientiousness: 0.8 }, order: 43 },
+          { text: 'I get irritated easily.', weights: { neuroticism: 0.8 }, order: 44 },
+          { text: 'I spend time reflecting on things.', weights: { openness: 0.8 }, order: 45 },
+          { text: 'I am quiet around strangers.', weights: { extraversion: -0.8 }, order: 46 },
+          { text: 'I make people feel at ease.', weights: { agreeableness: 0.8 }, order: 47 },
+          { text: 'I am exacting in my work.', weights: { conscientiousness: 0.8 }, order: 48 },
+          { text: 'I often feel blue.', weights: { neuroticism: 0.8 }, order: 49 },
+          { text: 'I am full of ideas.', weights: { openness: 0.8 }, order: 50 },
+        ];
+        const result = await this.prisma.question.createMany({
+          data: bfProps.map((p) => ({ ...p, questionnaireId: bf.id })),
+        });
+        return { message: 'Big Five questionnaire added incrementally', count: existingCount + result.count };
+      }
       return { message: 'Questions already exist', count: existingCount };
     }
 
