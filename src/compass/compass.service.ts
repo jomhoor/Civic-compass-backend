@@ -10,6 +10,12 @@ const AXES = [
   'environment',
   'justice',
   'technology',
+  // Big Five personality
+  'openness',
+  'conscientiousness',
+  'extraversion',
+  'agreeableness',
+  'neuroticism',
 ] as const;
 
 type Axis = (typeof AXES)[number];
@@ -23,6 +29,12 @@ const AXIS_LABELS: Record<Axis, string> = {
   environment: 'Environment',
   justice: 'Justice',
   technology: 'Technology',
+  // Big Five personality
+  openness: 'Openness',
+  conscientiousness: 'Conscientiousness',
+  extraversion: 'Extraversion',
+  agreeableness: 'Agreeableness',
+  neuroticism: 'Neuroticism',
 };
 
 @Injectable()

@@ -221,6 +221,22 @@ export class QuestionsService {
       },
     });
 
+    // Big Five Personality Test — 50-item IPIP inventory (public domain)
+    // 5 dimensions: Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism
+    const bigFive = await this.prisma.questionnaire.create({
+      data: {
+        slug: 'big-five',
+        title: 'Big Five Personality',
+        titleFa: 'شخصیت پنج‌عاملی',
+        description: 'Discover your personality across 5 dimensions: Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism. 50 questions based on the public-domain IPIP inventory.',
+        descriptionFa: 'شخصیت خود را در ۵ بُعد کشف کنید: گشودگی، وظیفه‌شناسی، برون‌گرایی، توافق‌پذیری و روان‌رنجوری. ۵۰ سؤال بر اساس پرسشنامه IPIP.',
+        icon: 'Brain',
+        questionCount: 50,
+        active: true,
+        order: 6,
+      },
+    });
+
     // ───────────────────────────────────────────────
     // Full proposition bank — 10 per axis, 80 total
     // ───────────────────────────────────────────────
@@ -522,8 +538,71 @@ export class QuestionsService {
       { text: 'Governments should be able to access private communications to prevent crime and terrorism.', weights: { technology: -0.9, civil_liberties: -0.4 }, order: 8 },
     ];
 
+    // ── Big Five Personality — 50 IPIP items, 10 per trait ──
+    // Uses personality dimensions: openness, conscientiousness, extraversion, agreeableness, neuroticism
+    // Weight 0.8 = regular item (agree → higher score on trait)
+    // Weight -0.8 = reverse-scored item (agree → lower score on trait)
+    // Based on the IPIP 50-item Big Five inventory (public domain, https://ipip.ori.org/)
+    const bigFivePropositions = [
+      // ── Extraversion (10) ──
+      { text: 'I am the life of the party.', weights: { extraversion: 0.8 }, order: 1 },
+      { text: 'I don\'t talk a lot.', weights: { extraversion: -0.8 }, order: 2 },
+      { text: 'I feel comfortable around people.', weights: { extraversion: 0.8 }, order: 3 },
+      { text: 'I keep in the background.', weights: { extraversion: -0.8 }, order: 4 },
+      { text: 'I start conversations.', weights: { extraversion: 0.8 }, order: 5 },
+      { text: 'I have little to say.', weights: { extraversion: -0.8 }, order: 6 },
+      { text: 'I talk to a lot of different people at parties.', weights: { extraversion: 0.8 }, order: 7 },
+      { text: 'I don\'t like to draw attention to myself.', weights: { extraversion: -0.8 }, order: 8 },
+      { text: 'I don\'t mind being the center of attention.', weights: { extraversion: 0.8 }, order: 9 },
+      { text: 'I am quiet around strangers.', weights: { extraversion: -0.8 }, order: 10 },
+      // ── Agreeableness (10) ──
+      { text: 'I feel little concern for others.', weights: { agreeableness: -0.8 }, order: 11 },
+      { text: 'I am interested in people.', weights: { agreeableness: 0.8 }, order: 12 },
+      { text: 'I insult people.', weights: { agreeableness: -0.8 }, order: 13 },
+      { text: 'I sympathize with others\' feelings.', weights: { agreeableness: 0.8 }, order: 14 },
+      { text: 'I am not interested in other people\'s problems.', weights: { agreeableness: -0.8 }, order: 15 },
+      { text: 'I have a soft heart.', weights: { agreeableness: 0.8 }, order: 16 },
+      { text: 'I am not really interested in others.', weights: { agreeableness: -0.8 }, order: 17 },
+      { text: 'I take time out for others.', weights: { agreeableness: 0.8 }, order: 18 },
+      { text: 'I feel others\' emotions.', weights: { agreeableness: 0.8 }, order: 19 },
+      { text: 'I make people feel at ease.', weights: { agreeableness: 0.8 }, order: 20 },
+      // ── Conscientiousness (10) ──
+      { text: 'I am always prepared.', weights: { conscientiousness: 0.8 }, order: 21 },
+      { text: 'I leave my belongings around.', weights: { conscientiousness: -0.8 }, order: 22 },
+      { text: 'I pay attention to details.', weights: { conscientiousness: 0.8 }, order: 23 },
+      { text: 'I make a mess of things.', weights: { conscientiousness: -0.8 }, order: 24 },
+      { text: 'I get chores done right away.', weights: { conscientiousness: 0.8 }, order: 25 },
+      { text: 'I often forget to put things back in their proper place.', weights: { conscientiousness: -0.8 }, order: 26 },
+      { text: 'I like order.', weights: { conscientiousness: 0.8 }, order: 27 },
+      { text: 'I shirk my duties.', weights: { conscientiousness: -0.8 }, order: 28 },
+      { text: 'I follow a schedule.', weights: { conscientiousness: 0.8 }, order: 29 },
+      { text: 'I am exacting in my work.', weights: { conscientiousness: 0.8 }, order: 30 },
+      // ── Neuroticism (10) ──
+      { text: 'I get stressed out easily.', weights: { neuroticism: 0.8 }, order: 31 },
+      { text: 'I am relaxed most of the time.', weights: { neuroticism: -0.8 }, order: 32 },
+      { text: 'I worry about things.', weights: { neuroticism: 0.8 }, order: 33 },
+      { text: 'I seldom feel blue.', weights: { neuroticism: -0.8 }, order: 34 },
+      { text: 'I am easily disturbed.', weights: { neuroticism: 0.8 }, order: 35 },
+      { text: 'I get upset easily.', weights: { neuroticism: 0.8 }, order: 36 },
+      { text: 'I change my mood a lot.', weights: { neuroticism: 0.8 }, order: 37 },
+      { text: 'I have frequent mood swings.', weights: { neuroticism: 0.8 }, order: 38 },
+      { text: 'I get irritated easily.', weights: { neuroticism: 0.8 }, order: 39 },
+      { text: 'I often feel blue.', weights: { neuroticism: 0.8 }, order: 40 },
+      // ── Openness (10) ──
+      { text: 'I have a rich vocabulary.', weights: { openness: 0.8 }, order: 41 },
+      { text: 'I have difficulty understanding abstract ideas.', weights: { openness: -0.8 }, order: 42 },
+      { text: 'I have a vivid imagination.', weights: { openness: 0.8 }, order: 43 },
+      { text: 'I am not interested in abstract ideas.', weights: { openness: -0.8 }, order: 44 },
+      { text: 'I have excellent ideas.', weights: { openness: 0.8 }, order: 45 },
+      { text: 'I do not have a good imagination.', weights: { openness: -0.8 }, order: 46 },
+      { text: 'I am quick to understand things.', weights: { openness: 0.8 }, order: 47 },
+      { text: 'I use difficult words.', weights: { openness: 0.8 }, order: 48 },
+      { text: 'I spend time reflecting on things.', weights: { openness: 0.8 }, order: 49 },
+      { text: 'I am full of ideas.', weights: { openness: 0.8 }, order: 50 },
+    ];
+
     // Create all questions with their questionnaire IDs
-    const [civicResult, quickResult, digitalResult, compassResult, nineAxesResult, snapshotResult] = await Promise.all([
+    const [civicResult, quickResult, digitalResult, compassResult, nineAxesResult, snapshotResult, bigFiveResult] = await Promise.all([
       this.prisma.question.createMany({
         data: civicPropositions.map((p) => ({ ...p, questionnaireId: civicCompass.id })),
       }),
@@ -542,10 +621,13 @@ export class QuestionsService {
       this.prisma.question.createMany({
         data: snapshotPropositions.map((p) => ({ ...p, questionnaireId: snapshotCompass.id })),
       }),
+      this.prisma.question.createMany({
+        data: bigFivePropositions.map((p) => ({ ...p, questionnaireId: bigFive.id })),
+      }),
     ]);
 
     return {
-      message: 'Seeded 6 questionnaires with propositions',
+      message: 'Seeded 7 questionnaires with propositions',
       questionnaires: [
         { slug: 'snapshot-compass', questions: snapshotResult.count },
         { slug: 'civic-compass', questions: civicResult.count },
@@ -553,8 +635,9 @@ export class QuestionsService {
         { slug: 'digital-age', questions: digitalResult.count },
         { slug: 'political-compass', questions: compassResult.count },
         { slug: 'nine-axes', questions: nineAxesResult.count },
+        { slug: 'big-five', questions: bigFiveResult.count },
       ],
-      totalQuestions: civicResult.count + quickResult.count + digitalResult.count + compassResult.count + nineAxesResult.count + snapshotResult.count,
+      totalQuestions: civicResult.count + quickResult.count + digitalResult.count + compassResult.count + nineAxesResult.count + snapshotResult.count + bigFiveResult.count,
     };
   }
 }
